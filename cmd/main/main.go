@@ -13,6 +13,7 @@ func main() {
 	r := mux.NewRouter()
 	routes.RegisterUser(r)
 	routes.UserFollowers(r)
+	routes.UserPost(r)
 	http.Handle("/", r)
 	log.Fatal(http.ListenAndServe("Localhost:9900", r))
 }
