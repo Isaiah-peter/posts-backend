@@ -37,7 +37,7 @@ func (u *Post) CreatePost() *Post {
 
 func GetPost() []Post {
 	var Post []Post
-	db.Find(Post)
+	db.Find(&Post)
 	return Post
 }
 
@@ -63,4 +63,10 @@ func DeleteLike(Id int64) Like {
 	var like Like
 	db.Where("ID=?", Id).Delete(like)
 	return like
+}
+
+func GetAllPostById(Id int64) *Post {
+	var getPost Post
+	db.Where("user_id=?", Id).Find(&getPost)
+	return &getPost
 }
