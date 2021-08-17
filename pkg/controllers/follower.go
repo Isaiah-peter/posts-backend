@@ -33,7 +33,7 @@ func Followers(w http.ResponseWriter, r *http.Request) {
 func GetFollower(w http.ResponseWriter, r *http.Request) {
 	utils.UseToken(r)
 	follower := []models.Follow{}
-	u := db.Find(&follower)
+	u := db.Find(&follower).Value
 	res, _ := json.Marshal(u)
 	w.Header().Set("Content-Type", "pkglication/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")

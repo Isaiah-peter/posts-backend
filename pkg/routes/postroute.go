@@ -13,5 +13,5 @@ var UserPost = func(router *mux.Router) {
 	router.HandleFunc("/like", controllers.Like).Methods("POST")
 	router.HandleFunc("/like/{id}", controllers.Dislike).Methods("DELETE")
 	router.HandleFunc("/timeline/all", controllers.Timeline).Methods("GET")
-	router.HandleFunc("/timeline", controllers.GetUser).Methods("GET")
+	router.HandleFunc("/timeline", controllers.GetUserpost).Methods("GET")
 }

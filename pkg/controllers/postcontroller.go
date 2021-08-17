@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/Isaiah-peter/posts-backend/pkg/models"
 	"github.com/Isaiah-peter/posts-backend/pkg/utils"
@@ -150,10 +151,20 @@ func Timeline(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func GetUser(w http.ResponseWriter, r *http.Request) {
-	utils.UseToken(r)
-	newuser := models.GetPost()
-	res, _ := json.Marshal(newuser)
+func GetUserpost(w http.ResponseWriter, r *http.Request) {
+	token := utils.UseToken(r)
+	followers := []models.Follow{}
+	posts := []models.Post{}
+	var ids []string
+	verifiedID, err := strconv.ParseInt(fmt.Sprintf("%.f", token["UserID"]), 0, 0)
+	if err != nil {
+		panic(err)
+	}
+	db.Where("user_id=?", verifiedID).Find(&followers).Pluck("follower_id", &ids)
+	ids = append(ids, strconv.FormatInt(verifiedID, 10))
+	fmt.Println("user_id IN (" + strings.Join(ids[:], ",") + ")")
+	u := db.Where("user_id IN (" + strings.Join(ids[:], ",") + ")").Find(&posts).Value
+	res, _ := json.Marshal(u)
 	w.Header().Set("Content-Type", "pkglication/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
