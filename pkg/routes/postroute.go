@@ -1,8 +1,11 @@
 package routes
 
 import (
+	"net/http"
+
 	"github.com/Isaiah-peter/posts-backend/pkg/controllers"
 	"github.com/gorilla/mux"
+	"github.com/rs/cors"
 )
 
 var UserPost = func(router *mux.Router) {
@@ -14,4 +17,11 @@ var UserPost = func(router *mux.Router) {
 	router.HandleFunc("/like/{id}", controllers.Dislike).Methods("DELETE")
 	router.HandleFunc("/timeline/all", controllers.Timeline).Methods("GET")
 	router.HandleFunc("/timeline", controllers.GetUserpost).Methods("GET")
+
+	handler := cors.New(cors.Options{
+		AllowedMethods: []string{"GET", "POST", "DELETE", "PUT"},
+	}).Handler(router)
+
+	http.ListenAndServe("Localhost:9900", handler)
+
 }

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/Isaiah-peter/posts-backend/pkg/models"
 	"github.com/Isaiah-peter/posts-backend/pkg/utils"
@@ -37,6 +38,24 @@ func GetFollower(w http.ResponseWriter, r *http.Request) {
 	res, _ := json.Marshal(u)
 	w.Header().Set("Content-Type", "pkglication/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.WriteHeader(http.StatusOK)
+	w.Write(res)
+}
+
+func GetUserFollowerDetails(w http.ResponseWriter, r *http.Request) {
+	token := utils.UseToken(r)
+	followers := []models.Follow{}
+	user := []models.User{}
+	var ids []string
+	verifiedID, err := strconv.ParseInt(fmt.Sprintf("%.f", token["UserID"]), 0, 0)
+	if err != nil {
+		panic(err)
+	}
+	db.Where("user_id=?", verifiedID).Find(&followers).Pluck("follower_id", &ids)
+	fmt.Println("user_id IN (" + strings.Join(ids[:], ",") + ")")
+	u := db.Where("ID IN (" + strings.Join(ids[:], ",") + ")").Find(&user).Value
+	res, _ := json.Marshal(u)
+	w.Header().Set("Content-Type", "pkglication/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
 }
