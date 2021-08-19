@@ -26,6 +26,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	u := newUser.CreateUser()
 	res, _ := json.Marshal(u)
 	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Write(res)
 }
 
@@ -134,7 +135,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 			userDetail.From = user.From
 			fmt.Println("From: ", user.From)
 		}
-
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		dr.Save(&userDetail)
 	}
 

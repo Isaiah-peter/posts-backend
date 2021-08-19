@@ -32,9 +32,11 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		res, _ := json.Marshal("you are not authorize")
 		w.WriteHeader(http.StatusUnauthorized)
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Write(res)
 	}
 	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Write(res)
 }
 
@@ -58,7 +60,7 @@ func UpdatePost(w http.ResponseWriter, r *http.Request) {
 	if post.Img != "" {
 		postDetail.Img = post.Img
 	}
-
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	db.Save(&postDetail)
 }
 
@@ -111,6 +113,7 @@ func Like(w http.ResponseWriter, r *http.Request) {
 	res, err := json.Marshal(like)
 	if err != nil {
 		res, _ := json.Marshal("you are not authorize")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.WriteHeader(http.StatusUnauthorized)
 		w.Write(res)
 	}
@@ -146,6 +149,7 @@ func Timeline(w http.ResponseWriter, r *http.Request) {
 	u := db.Where("user_id=?", verifiedID).Find(&posts).Value
 	res, _ := json.Marshal(u)
 	w.Header().Set("Content-Type", "pkglication/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
 
@@ -166,6 +170,7 @@ func GetUserpost(w http.ResponseWriter, r *http.Request) {
 	u := db.Where("user_id IN (" + strings.Join(ids[:], ",") + ")").Find(&posts).Value
 	res, _ := json.Marshal(u)
 	w.Header().Set("Content-Type", "pkglication/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
 }

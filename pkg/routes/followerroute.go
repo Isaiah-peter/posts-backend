@@ -14,8 +14,9 @@ var UserFollowers = func(router *mux.Router) {
 	router.HandleFunc("follower/detail", controllers.GetUserFollowerDetails).Methods("GET")
 
 	handler := cors.New(cors.Options{
-		AllowedMethods: []string{"GET", "POST"},
+		AllowedMethods: []string{"GET", "POST", "DELETE", "PUT"},
 	}).Handler(router)
 
-	http.ListenAndServe("Localhost:9900", handler)
+	http.ListenAndServe(":8080", handler)
+
 }

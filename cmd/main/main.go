@@ -15,5 +15,5 @@ func main() {
 	routes.UserFollowers(r)
 	routes.UserPost(r)
 	http.Handle("/", r)
-	log.Fatal(http.ListenAndServe("Localhost:9900", r))
+	log.Fatal(http.ListenAndServe(":8080", r))
 }
