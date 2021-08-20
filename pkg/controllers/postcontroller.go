@@ -174,3 +174,17 @@ func GetUserpost(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
 }
+
+func GetLike(w http.ResponseWriter, r *http.Request) {
+	utils.UseToken(r)
+	var ids []string
+	posts := []models.Post{}
+	like := []models.Like{}
+	db.Find(&posts).Pluck("ID", &ids)
+	u := db.Where("post_id IN (" + strings.Join(ids[:], ",") + ")").Find(&like).Value
+	res, _ := json.Marshal(u)
+	w.Header().Set("Content-Type", "pkglication/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.WriteHeader(http.StatusOK)
+	w.Write(res)
+}

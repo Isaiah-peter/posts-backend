@@ -12,8 +12,9 @@ import (
 func main() {
 	r := mux.NewRouter()
 	routes.RegisterUser(r)
-	routes.UserFollowers(r)
-	routes.UserPost(r)
+	routes.Followers(r)
+	routes.Post(r)
+	routes.Websoc(r)
 	http.Handle("/", r)
-	log.Fatal(http.ListenAndServe(":8080", r))
+	log.Fatal(http.ListenAndServe("Localhost:8000", r))
 }
