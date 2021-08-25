@@ -9,6 +9,7 @@ import (
 
 	"github.com/Isaiah-peter/posts-backend/pkg/models"
 	"github.com/Isaiah-peter/posts-backend/pkg/utils"
+	"github.com/gorilla/mux"
 )
 
 var (
@@ -43,11 +44,13 @@ func GetFollower(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetUserFollowerDetails(w http.ResponseWriter, r *http.Request) {
-	token := utils.UseToken(r)
+	utils.UseToken(r)
 	followers := []models.Follow{}
 	user := []models.User{}
 	var ids []string
-	verifiedID, err := strconv.ParseInt(fmt.Sprintf("%.f", token["UserID"]), 0, 0)
+	vars := mux.Vars(r)
+	id := vars["id"]
+	verifiedID, err := strconv.ParseInt(id, 0, 0)
 	if err != nil {
 		panic(err)
 	}

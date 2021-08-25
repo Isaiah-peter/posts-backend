@@ -8,6 +8,6 @@ import (
 var Followers = func(router *mux.Router) {
 	router.HandleFunc("/follower", controllers.Followers).Methods("POST")
 	router.HandleFunc("/follower", controllers.GetFollower).Methods("GET")
-	router.HandleFunc("/follower/detail", controllers.GetUserFollowerDetails).Methods("GET")
+	router.HandleFunc("/follower/{id}", controllers.GetUserFollowerDetails).Methods("GET")
 
 }

@@ -156,11 +156,13 @@ func Timeline(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetUserpost(w http.ResponseWriter, r *http.Request) {
-	token := utils.UseToken(r)
+	utils.UseToken(r)
 	followers := []models.Follow{}
 	posts := []models.Post{}
 	var ids []string
-	verifiedID, err := strconv.ParseInt(fmt.Sprintf("%.f", token["UserID"]), 0, 0)
+	vid := mux.Vars(r)
+	id := vid["id"]
+	verifiedID, err := strconv.ParseInt(id, 0, 0)
 	if err != nil {
 		panic(err)
 	}
