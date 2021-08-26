@@ -26,6 +26,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	u := newUser.CreateUser()
 	res, _ := json.Marshal(u)
 	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Write(res)
 }
 
@@ -134,34 +135,28 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 			userDetail.From = user.From
 			fmt.Println("From: ", user.From)
 		}
-
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		dr.Save(&userDetail)
 	}
 
 }
 
 func GetUserById(w http.ResponseWriter, r *http.Request) {
-	token := utils.UseToken(r)
-	verifiedID, err := strconv.ParseInt(fmt.Sprintf("%.f", token["UserID"]), 0, 0)
-	if err != nil {
-		panic(err)
-	}
+	utils.UseToken(r)
 	vars := mux.Vars(r)
 	userId := vars["id"]
-
 	id, err := strconv.ParseInt(userId, 0, 0)
 	if err != nil {
 		panic(err)
 	}
 
-	if verifiedID == id {
-		userDetail, _ := models.GetUserById(id)
-		res, _ := json.Marshal(userDetail)
-		w.Header().Set("Content-Type", "pkglication/json")
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.WriteHeader(http.StatusOK)
-		w.Write(res)
-	}
+	userDetail, _ := models.GetUserById(id)
+	res, _ := json.Marshal(userDetail)
+	w.Header().Set("Content-Type", "pkglication/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.WriteHeader(http.StatusOK)
+	w.Write(res)
+
 }
 
 func DeleteUser(w http.ResponseWriter, r *http.Request) {
@@ -186,4 +181,15 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write(res)
 	}
+}
+
+func GetAllUser(w http.ResponseWriter, r *http.Request) {
+	utils.UseToken(r)
+	follower := []models.User{}
+	u := db.Find(&follower).Value
+	res, _ := json.Marshal(u)
+	w.Header().Set("Content-Type", "pkglication/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.WriteHeader(http.StatusOK)
+	w.Write(res)
 }

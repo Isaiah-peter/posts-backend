@@ -5,6 +5,9 @@ import (
 	"github.com/gorilla/mux"
 )
 
-var UserFollowers = func(router *mux.Router) {
+var Followers = func(router *mux.Router) {
 	router.HandleFunc("/follower", controllers.Followers).Methods("POST")
+	router.HandleFunc("/follower", controllers.GetFollower).Methods("GET")
+	router.HandleFunc("/follower/{id}", controllers.GetUserFollowerDetails).Methods("GET")
+
 }

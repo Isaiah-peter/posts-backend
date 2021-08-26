@@ -15,7 +15,7 @@ var (
 
 type User struct {
 	gorm.Model
-	UserName       string `gorm:"unique" binding:"required" json:"username"`
+	UserName       string ` binding:"required" json:"username"`
 	Email          string `gorm:"unique" binding:"required" json:"email"`
 	Password       string ` binding:"required" json:"password"`
 	ProfilePicture string ` json:"profilepicture"`
