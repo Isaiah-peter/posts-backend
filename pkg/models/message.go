@@ -25,6 +25,12 @@ func init() {
 	db.AutoMigrate(&Message{})
 }
 
+func (c *Message) CreateMessage() *Message {
+	db.NewRecord(c)
+	db.Create(c)
+	return c
+}
+
 func (c *Conversation) CreateConversation() *Conversation {
 	db.NewRecord(c)
 	db.Create(c)

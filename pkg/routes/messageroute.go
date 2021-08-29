@@ -6,5 +6,6 @@ import (
 )
 
 var MessageUser = func(router *mux.Router) {
-  router.HandleFunc("/welcom", controllers.Welcome).Methods("GET")
+	router.HandleFunc("/message", controllers.SendMessage).Methods("POST")
+	router.HandleFunc("/message/{id}", controllers.GetMessage).Methods("GET")
 }

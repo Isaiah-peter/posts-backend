@@ -7,4 +7,5 @@ import (
 
 var ConversationUser = func(router *mux.Router) {
 	router.HandleFunc("/addfollowertomessage", controllers.AddFollowerToConversation).Methods("POST")
+	router.HandleFunc("/getconversation/{id}", controllers.GetConvOfUser).Methods("GET")
 }
