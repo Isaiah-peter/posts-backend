@@ -7,7 +7,8 @@ import (
 
 type Group struct {
 	gorm.Model
-	Name string `json:"nameofgroup"`
+	Name   string `json:"nameofgroup"`
+	UserId int64  `json:"user_id"`
 }
 
 type GroupUser struct {
@@ -29,4 +30,22 @@ func init() {
 	db.AutoMigrate(&Group{})
 	db.AutoMigrate(&GroupUser{})
 	db.AutoMigrate(&GroupMessages{})
+}
+
+func (g *Group) CreateGroup() *Group {
+	db.NewRecord(g)
+	db.Create(g)
+	return g
+}
+
+func (g *GroupUser) AddGroup() *GroupUser {
+	db.NewRecord(g)
+	db.Create(g)
+	return g
+}
+
+func (m *GroupMessages) GroupMessage() *GroupMessages {
+	db.NewRecord(m)
+	db.Create(m)
+	return m
 }

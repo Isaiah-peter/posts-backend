@@ -45,7 +45,6 @@ func GetConvOfUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
-
 	if id == verifiedID {
 		u := db.Where("sender_id=?", id).Or("recieve_id=?", id).Find(&conv).Value
 		res, _ := json.Marshal(u)

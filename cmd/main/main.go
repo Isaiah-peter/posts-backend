@@ -17,6 +17,7 @@ func main() {
 	routes.Post(r)
 	routes.ConversationUser(r)
 	routes.MessageUser(r)
+	routes.Group(r)
 	http.Handle("/", r)
 	log.Fatal(http.ListenAndServe(":8000", handlers.CORS(handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}), handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "OPTIONS", "DELETE"}), handlers.AllowedOrigins([]string{"*"}))(r)))
 
