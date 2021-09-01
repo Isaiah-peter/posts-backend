@@ -28,6 +28,11 @@ func CreateGroup(w http.ResponseWriter, r *http.Request) {
 	group.UserId = verifiedID
 	u := group.CreateGroup()
 	res, _ := json.Marshal(u)
+	user := &models.GroupUser{
+		UserId:  verifiedID,
+		GroupId: int64(u.ID),
+	}
+	user.AddGroup()
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Write(res)
@@ -48,6 +53,7 @@ func CreateGroupMessage(w http.ResponseWriter, r *http.Request) {
 	utils.UseToken(r)
 	message := &models.GroupMessages{}
 	utils.ParseBody(r, message)
+
 	u := message.GroupMessage()
 	res, _ := json.Marshal(u)
 	w.WriteHeader(http.StatusOK)
@@ -90,6 +96,23 @@ func GetGroupUserjoined(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetGroupUser(w http.ResponseWriter, r *http.Request) {
+	utils.UseToken(r)
+	group := []models.GroupUser{}
+	vars := mux.Vars(r)
+	userid := vars["id"]
+	id, err := strconv.ParseInt(userid, 0, 0)
+	if err != nil {
+		panic(err)
+	}
+	u := db.Where("user_id=?", id).Find(&group).Value
+	res, _ := json.Marshal(u)
+	w.Header().Set("Content-Type", "pkglication/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.WriteHeader(http.StatusOK)
+	w.Write(res)
+}
+
+func GetGroupUserbygruoupid(w http.ResponseWriter, r *http.Request) {
 	utils.UseToken(r)
 	group := []models.GroupUser{}
 	vars := mux.Vars(r)
