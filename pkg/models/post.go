@@ -61,7 +61,7 @@ func (u *Like) CreateLike() *Like {
 
 func DeleteLike(Id int64) Like {
 	var like Like
-	db.Where("ID=?", Id).Delete(like)
+	db.Where("user_id=?", Id).Delete(like)
 	return like
 }
 
