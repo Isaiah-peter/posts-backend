@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	newMessage models.Message
+	NewMessage models.Message
 )
 
 func SendMessage(w http.ResponseWriter, r *http.Request) {

@@ -12,7 +12,7 @@ import (
 )
 
 var (
-	newConversation models.Conversation
+	NewConversation models.Conversation
 )
 
 func AddFollowerToConversation(w http.ResponseWriter, r *http.Request) {

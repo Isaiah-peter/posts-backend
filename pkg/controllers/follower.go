@@ -63,3 +63,21 @@ func GetUserFollowerDetails(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
 }
+
+func Unfollow(w http.ResponseWriter, r *http.Request) {
+	utils.UseToken(r)
+	vars := mux.Vars(r)
+	userId := vars["id"]
+
+	id, err := strconv.ParseInt(userId, 0, 0)
+	if err != nil {
+		panic(err)
+	}
+
+	follow := models.Deletefollower(id)
+	res, _ := json.Marshal(follow)
+	w.Header().Set("Content-Type", "pkglication/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.WriteHeader(http.StatusOK)
+	w.Write(res)
+}

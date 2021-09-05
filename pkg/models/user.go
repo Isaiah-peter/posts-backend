@@ -81,3 +81,9 @@ func (f *Follow) CreateFollower() *Follow {
 	db.Create(f)
 	return f
 }
+
+func Deletefollower(Id int64) Follow {
+	var user Follow
+	db.Where("follower_id=?", Id).Delete(user)
+	return user
+}
