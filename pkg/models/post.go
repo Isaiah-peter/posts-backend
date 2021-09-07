@@ -6,7 +6,7 @@ import (
 )
 
 var (
-	dbs *gorm.DB
+	dbsa *gorm.DB
 )
 
 type Post struct {
@@ -22,11 +22,26 @@ type Like struct {
 	PostId int64 `binding:"required" json:"post_id"`
 }
 
+type Comment struct {
+	gorm.Model
+	Message string `binding:"required" json:"comment"`
+	UserId  int64  `binding:"required" json:"user_id"`
+	PostId  int64  `binding:"required" json:"post_id"`
+}
+
+type Tag struct {
+	gorm.Model
+	UserId int64 `binding:"required" json:"user_id"`
+	PostId int64 `binding:"required" json:"post_id"`
+}
+
 func init() {
 	config.Connect()
-	db = config.GetDB()
+	db := config.GetDB()
 	db.AutoMigrate(&Post{})
 	db.AutoMigrate(&Like{})
+	db.AutoMigrate(&Comment{})
+	db.AutoMigrate(&Tag{})
 }
 
 func (u *Post) CreatePost() *Post {
@@ -69,4 +84,10 @@ func GetAllPostById(Id int64) *Post {
 	var getPost Post
 	db.Where("user_id=?", Id).Find(&getPost)
 	return &getPost
+}
+
+func (c *Comment) CreateComment() *Comment {
+	db.NewRecord(c)
+	db.Create(c)
+	return c
 }

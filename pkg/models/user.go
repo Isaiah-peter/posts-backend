@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	db *gorm.DB
+	dbs *gorm.DB
 )
 
 type User struct {
@@ -41,7 +41,7 @@ type Token struct {
 
 func init() {
 	config.Connect()
-	db = config.GetDB()
+	db := config.GetDB()
 	db.AutoMigrate(&User{})
 	db.AutoMigrate(&Follow{})
 }

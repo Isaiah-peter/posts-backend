@@ -5,6 +5,10 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+var (
+	db *gorm.DB
+)
+
 type Message struct {
 	gorm.Model
 	ConversationId int64  `json:"conversation_id"`
@@ -20,7 +24,7 @@ type Conversation struct {
 
 func init() {
 	config.Connect()
-	db = config.GetDB()
+	db := config.GetDB()
 	db.AutoMigrate(&Conversation{})
 	db.AutoMigrate(&Message{})
 }

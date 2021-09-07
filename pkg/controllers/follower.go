@@ -26,6 +26,13 @@ func Followers(w http.ResponseWriter, r *http.Request) {
 	}
 	follower.UserID = verifiedID
 	f := follower.CreateFollower()
+	notification := &models.Notification{
+		TypeId:    follower.UserID,
+		Type:      "friends",
+		Viewed:    false,
+		reciverId: follower.FollowerID,
+	}
+	notification.CreateNotification()
 	res, _ := json.Marshal(f)
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
