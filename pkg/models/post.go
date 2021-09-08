@@ -37,57 +37,64 @@ type Tag struct {
 
 func init() {
 	config.Connect()
-	db := config.GetDB()
-	db.AutoMigrate(&Post{})
-	db.AutoMigrate(&Like{})
-	db.AutoMigrate(&Comment{})
-	db.AutoMigrate(&Tag{})
+	dbsa = config.GetDB()
+	dbsa.AutoMigrate(&Post{})
+	dbsa.AutoMigrate(&Like{})
+	dbsa.AutoMigrate(&Comment{})
+	dbsa.AutoMigrate(&Tag{})
 }
 
 func (u *Post) CreatePost() *Post {
-	db.NewRecord(u)
-	db.Create(u)
+	dbsa.NewRecord(u)
+	dbsa.Create(u)
 	return u
 }
 
 func GetPost() []Post {
 	var Post []Post
-	db.Find(&Post)
+	dbsa.Find(&Post)
 	return Post
 }
 
 func GetPostById(Id int64) (*Post, *gorm.DB) {
 	var getPost Post
-	db := db.Where("ID=?", Id).Find(&getPost)
+	db := dbsa.Where("ID=?", Id).Find(&getPost)
 	return &getPost, db
 }
 
 func DeletePost(Id int64) Post {
 	var post Post
-	db.Where("ID=?", Id).Delete(post)
+	dbsa.Where("ID=?", Id).Delete(post)
 	return post
 }
 
 func (u *Like) CreateLike() *Like {
-	db.NewRecord(u)
-	db.Create(u)
+	dbsa.NewRecord(u)
+	dbsa.Create(u)
 	return u
 }
 
 func DeleteLike(Id int64) Like {
 	var like Like
-	db.Where("post_id=?", Id).Delete(like)
+	dbsa.Where("post_id=?", Id).Delete(like)
 	return like
 }
 
 func GetAllPostById(Id int64) *Post {
 	var getPost Post
-	db.Where("user_id=?", Id).Find(&getPost)
+	dbsa.Where("user_id=?", Id).Find(&getPost)
 	return &getPost
 }
 
 func (c *Comment) CreateComment() *Comment {
-	db.NewRecord(c)
-	db.Create(c)
+	dbsa.NewRecord(c)
+	dbsa.Create(c)
 	return c
 }
+
+func (t *Tag)CreateTag() *Tag {
+	dbsa.NewRecord(t)
+	dbsa.Create(t)
+	return t
+}
+

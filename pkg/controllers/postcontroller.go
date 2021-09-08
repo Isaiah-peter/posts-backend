@@ -139,21 +139,7 @@ func Dislike(w http.ResponseWriter, r *http.Request) {
 	w.Write(res)
 }
 
-func Timeline(w http.ResponseWriter, r *http.Request) {
-	token := utils.UseToken(r)
-	posts := []models.Post{}
-	verifiedID, err := strconv.ParseInt(fmt.Sprintf("%.f", token["UserID"]), 0, 0)
-	if err != nil {
-		panic(err)
-	}
-	u := db.Where("user_id=?", verifiedID).Find(&posts).Value
-	res, _ := json.Marshal(u)
-	w.Header().Set("Content-Type", "pkglication/json")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.WriteHeader(http.StatusOK)
-	w.Write(res)
 
-}
 
 func GetUserpost(w http.ResponseWriter, r *http.Request) {
 	utils.UseToken(r)

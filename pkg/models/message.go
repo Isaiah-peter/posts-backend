@@ -24,7 +24,7 @@ type Conversation struct {
 
 func init() {
 	config.Connect()
-	db := config.GetDB()
+	db = config.GetDB()
 	db.AutoMigrate(&Conversation{})
 	db.AutoMigrate(&Message{})
 }
