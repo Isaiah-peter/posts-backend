@@ -62,14 +62,11 @@ func GetComment(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetNotification(w http.ResponseWriter, r *http.Request) {
-	token := utils.UseToken(r)
-	not := []models.Notification{}
-	verifiedID, err := strconv.ParseInt(fmt.Sprintf("%.f", token["UserID"]), 0, 0)
-	if err != nil {
-		panic(err)
-	}
-
-	u := db.Where("user_id=?", verifiedID).Find(&not).Value
+	utils.UseToken(r)
+	var not []models.Notification
+	vars := mux.Vars(r)
+	postId := vars["id"]
+	u := db.Where("post_id=?", postId).Find(&not).Value
 	res, _ := json.Marshal(u)
 	w.Header().Set("Content-Type", "pkglication/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")

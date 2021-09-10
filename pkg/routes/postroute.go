@@ -15,4 +15,5 @@ var Post = func(router *mux.Router) {
 	router.HandleFunc("/post/{id}", controllers.UpdatePost).Methods("PUT")
 	router.HandleFunc("/post/{id}", controllers.DeletePost).Methods("DELETE")
 	router.HandleFunc("/like/{id}", controllers.Dislike).Methods("DELETE")
+	router.HandleFunc("/getalltimeline", controllers.GetUserpostUsingName).Methods("GET")
 }

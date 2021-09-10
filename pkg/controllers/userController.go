@@ -193,3 +193,17 @@ func GetAllUser(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
 }
+
+
+func GetUserByusername(w http.ResponseWriter, r *http.Request) {
+	usern := r.URL.Query()["username"]
+	utils.UseToken(r)
+	var user []models.User
+	u := db.Where("user_name=?", usern ).Find(&user).Value
+	res, _ := json.Marshal(u)
+	w.Header().Set("Content-Type", "pkglication/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.WriteHeader(http.StatusOK)
+	w.Write(res)
+
+}
