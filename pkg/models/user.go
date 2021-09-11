@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	db *gorm.DB
+	dbs *gorm.DB
 )
 
 type User struct {
@@ -41,9 +41,9 @@ type Token struct {
 
 func init() {
 	config.Connect()
-	db = config.GetDB()
-	db.AutoMigrate(&User{})
-	db.AutoMigrate(&Follow{})
+	dbs = config.GetDB()
+	dbs.AutoMigrate(&User{})
+	dbs.AutoMigrate(&Follow{})
 }
 
 func (u *User) CreateUser() *User {
@@ -53,37 +53,37 @@ func (u *User) CreateUser() *User {
 		panic(err)
 	}
 	u.Password = hashPassword
-	db.NewRecord(u)
-	db.Create(u)
+	dbs.NewRecord(u)
+	dbs.Create(u)
 	return u
 }
 
 func GetUser() []User {
 	var User []User
-	db.Find(User)
+	dbs.Find(User)
 	return User
 }
 
 func GetUserById(Id int64) (*User, *gorm.DB) {
 	var getUser User
-	db := db.Where("ID=?", Id).Find(&getUser)
+	db := dbs.Where("ID=?", Id).Find(&getUser)
 	return &getUser, db
 }
 
 func DeleteUser(Id int64) User {
 	var user User
-	db.Where("ID=?", Id).Delete(user)
+	dbs.Where("ID=?", Id).Delete(user)
 	return user
 }
 
 func (f *Follow) CreateFollower() *Follow {
-	db.NewRecord(f)
-	db.Create(f)
+	dbs.NewRecord(f)
+	dbs.Create(f)
 	return f
 }
 
 func Deletefollower(Id int64) Follow {
 	var user Follow
-	db.Where("follower_id=?", Id).Delete(user)
+	dbs.Where("follower_id=?", Id).Delete(user)
 	return user
 }

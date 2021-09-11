@@ -139,21 +139,7 @@ func Dislike(w http.ResponseWriter, r *http.Request) {
 	w.Write(res)
 }
 
-func Timeline(w http.ResponseWriter, r *http.Request) {
-	token := utils.UseToken(r)
-	posts := []models.Post{}
-	verifiedID, err := strconv.ParseInt(fmt.Sprintf("%.f", token["UserID"]), 0, 0)
-	if err != nil {
-		panic(err)
-	}
-	u := db.Where("user_id=?", verifiedID).Find(&posts).Value
-	res, _ := json.Marshal(u)
-	w.Header().Set("Content-Type", "pkglication/json")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.WriteHeader(http.StatusOK)
-	w.Write(res)
 
-}
 
 func GetUserpost(w http.ResponseWriter, r *http.Request) {
 	utils.UseToken(r)
@@ -183,6 +169,29 @@ func GetLike(w http.ResponseWriter, r *http.Request) {
 	like := []models.Like{}
 	ids := vars["id"]
 	u := db.Where("post_id=?", ids).Find(&like).Value
+	res, _ := json.Marshal(u)
+	w.Header().Set("Content-Type", "pkglication/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.WriteHeader(http.StatusOK)
+	w.Write(res)
+}
+
+
+func GetUserpostUsingName(w http.ResponseWriter, r *http.Request) {
+	utils.UseToken(r)
+	var user []models.User
+	var followers []models.Follow
+	var posts []models.Post
+	var ids []string
+	var id []string
+	username := r.URL.Query()["username"]
+
+	db.Where("user_name=?", username ).Find(&user).Pluck("ID", &id)
+	fmt.Println("user_id IN (" + strings.Join(id[:], ",") + ")")
+	db.Where("user_id IN (" + strings.Join(id[:], ",") + ")").Find(&followers).Pluck("follower_id", &ids)
+	ids = append(ids, strings.Join(id[:], ","))
+	fmt.Println("user_id IN (" + strings.Join(ids[:], ",") + ")")
+	u := db.Where("user_id IN (" + strings.Join(ids[:], ",") + ")").Find(&posts).Value
 	res, _ := json.Marshal(u)
 	w.Header().Set("Content-Type", "pkglication/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")

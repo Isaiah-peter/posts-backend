@@ -5,6 +5,10 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+var (
+	db *gorm.DB
+)
+
 type Message struct {
 	gorm.Model
 	ConversationId int64  `json:"conversation_id"`

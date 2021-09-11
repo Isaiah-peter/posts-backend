@@ -14,6 +14,7 @@ import (
 
 var (
 	NewFollower models.Follow
+	NewTag models.Tag
 )
 
 func Followers(w http.ResponseWriter, r *http.Request) {
@@ -26,6 +27,13 @@ func Followers(w http.ResponseWriter, r *http.Request) {
 	}
 	follower.UserID = verifiedID
 	f := follower.CreateFollower()
+	notification := &models.Notification{
+		TypeId:    follower.UserID,
+		Type:      "friends",
+		Viewed:    false,
+		ReciverId: follower.FollowerID,
+	}
+	notification.CreateNotification()
 	res, _ := json.Marshal(f)
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
@@ -76,6 +84,29 @@ func Unfollow(w http.ResponseWriter, r *http.Request) {
 
 	follow := models.Deletefollower(id)
 	res, _ := json.Marshal(follow)
+	w.Header().Set("Content-Type", "pkglication/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.WriteHeader(http.StatusOK)
+	w.Write(res)
+}
+
+func CreateTag(w http.ResponseWriter, r *http.Request)  {
+	utils.UseToken(r)
+	var tag = &models.Tag{}
+	utils.ParseBody(r, tag)
+	u := tag.CreateTag()
+	res, _ := json.Marshal(u)
+	w.WriteHeader(http.StatusOK)
+	w.Write(res)
+}
+
+func GetTag(w http.ResponseWriter, r *http.Request)  {
+	utils.UseToken(r)
+	var tag []models.Tag
+	vars := mux.Vars(r)
+	postId := vars["id"]
+	u := db.Where("post_id=?", postId).Find(&tag).Value
+	res, _ := json.Marshal(u)
 	w.Header().Set("Content-Type", "pkglication/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.WriteHeader(http.StatusOK)
