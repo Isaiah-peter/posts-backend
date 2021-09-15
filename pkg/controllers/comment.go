@@ -26,6 +26,7 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 	}
 	comment.UserId = verifiedID
 	u := comment.CreateComment()
+
 	res, _ := json.Marshal(u)
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -66,7 +67,7 @@ func GetNotification(w http.ResponseWriter, r *http.Request) {
 	var not []models.Notification
 	vars := mux.Vars(r)
 	postId := vars["id"]
-	u := db.Where("post_id=?", postId).Find(&not).Value
+	u := db.Where("reciver_id=?", postId).Find(&not).Value
 	res, _ := json.Marshal(u)
 	w.Header().Set("Content-Type", "pkglication/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")

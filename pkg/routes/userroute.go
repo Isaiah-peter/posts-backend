@@ -13,5 +13,5 @@ var RegisterUser = func(router *mux.Router) {
 	router.HandleFunc("/userdata", controllers.GetUserByusername).Methods("GET")
 	router.HandleFunc("/user/{id}", controllers.UpdateUser).Methods("PUT")
 	router.HandleFunc("/user/{id}", controllers.DeleteUser).Methods("DELETE")
-	router.HandleFunc("/notification", controllers.GetNotification).Methods("GET")
+	router.HandleFunc("/notification/{id}", controllers.GetNotification).Methods("GET")
 }
