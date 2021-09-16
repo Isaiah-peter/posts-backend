@@ -31,6 +31,13 @@ func AddFollowerToConversation(w http.ResponseWriter, r *http.Request) {
 		RecieveId: conversation.SenderId ,
 		SenderId: conversation.RecieveId,
 	}).FirstOrCreate(conversation)
+	notification := &models.Notification{
+		TypeId: conversation.SenderId,
+		Type: "someone started a conversation with you",
+		Viewed: false,
+		ReciverId: conversation.RecieveId,
+	}
+	notification.CreateNotification()
 	res, _ := json.Marshal(u)
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Access-Control-Allow-Origin", "*")
