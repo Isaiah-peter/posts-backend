@@ -24,7 +24,20 @@ func AddFollowerToConversation(w http.ResponseWriter, r *http.Request) {
 	}
 	utils.ParseBody(r, conversation)
 	conversation.SenderId = verifiedID
-	u := conversation.CreateConversation()
+	u := db.Where(&models.Conversation{
+		RecieveId: conversation.RecieveId,
+		SenderId: conversation.SenderId,
+	}).Or(&models.Conversation{
+		RecieveId: conversation.SenderId ,
+		SenderId: conversation.RecieveId,
+	}).FirstOrCreate(conversation)
+	notification := &models.Notification{
+		TypeId: conversation.SenderId,
+		Type: "someone started a conversation with you",
+		Viewed: false,
+		ReciverId: conversation.RecieveId,
+	}
+	notification.CreateNotification()
 	res, _ := json.Marshal(u)
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -34,7 +47,7 @@ func AddFollowerToConversation(w http.ResponseWriter, r *http.Request) {
 
 func GetConvOfUser(w http.ResponseWriter, r *http.Request) {
 	token := utils.UseToken(r)
-	conv := []models.Conversation{}
+	var conv []models.Conversation
 	verifiedID, err := strconv.ParseInt(fmt.Sprintf("%.f", token["UserID"]), 0, 0)
 	if err != nil {
 		panic(err)

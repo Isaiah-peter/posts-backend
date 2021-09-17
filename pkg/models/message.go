@@ -29,6 +29,8 @@ func init() {
 	db.AutoMigrate(&Message{})
 }
 
+
+
 func (c *Message) CreateMessage() *Message {
 	db.NewRecord(c)
 	db.Create(c)
@@ -36,7 +38,7 @@ func (c *Message) CreateMessage() *Message {
 }
 
 func (c *Conversation) CreateConversation() *Conversation {
-	db.NewRecord(c)
-	db.Create(c)
+
+	db.FirstOrCreate(c)
 	return c
 }

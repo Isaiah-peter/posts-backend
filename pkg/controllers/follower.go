@@ -29,7 +29,7 @@ func Followers(w http.ResponseWriter, r *http.Request) {
 	f := follower.CreateFollower()
 	notification := &models.Notification{
 		TypeId:    follower.UserID,
-		Type:      "friends",
+		Type:      "follow you",
 		Viewed:    false,
 		ReciverId: follower.FollowerID,
 	}
