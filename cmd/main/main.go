@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/Isaiah-peter/posts-backend/pkg/routes"
 	"github.com/gorilla/handlers"
@@ -11,6 +12,8 @@ import (
 )
 
 func main() {
+	os.Setenv("PORT", "8000")
+	port := os.Getenv("PORT")
 	r := mux.NewRouter()
 	routes.RegisterUser(r)
 	routes.Followers(r)
@@ -19,6 +22,6 @@ func main() {
 	routes.MessageUser(r)
 	routes.Group(r)
 	http.Handle("/", r)
-	log.Fatal(http.ListenAndServe(":8000", handlers.CORS(handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}), handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "OPTIONS", "DELETE"}), handlers.AllowedOrigins([]string{"*"}))(r)))
+	log.Fatal(http.ListenAndServe(port, handlers.CORS(handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}), handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "OPTIONS", "DELETE"}), handlers.AllowedOrigins([]string{"*"}))(r)))
 
 }
