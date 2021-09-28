@@ -155,7 +155,7 @@ func GetUserpost(w http.ResponseWriter, r *http.Request) {
 	db.Where("user_id=?", verifiedID).Find(&followers).Pluck("follower_id", &ids)
 	ids = append(ids, strconv.FormatInt(verifiedID, 10))
 	fmt.Println("user_id IN (" + strings.Join(ids[:], ",") + ")")
-	u := db.Where("user_id IN (" + strings.Join(ids[:], ",") + ")").Find(&posts).Value
+	u := db.Where("user_id IN (" + strings.Join(ids[:], ",") + ")").Preload("Tag").Find(&posts).Value
 	res, _ := json.Marshal(u)
 	w.Header().Set("Content-Type", "pkglication/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -191,7 +191,7 @@ func GetUserpostUsingName(w http.ResponseWriter, r *http.Request) {
 	db.Where("user_id IN (" + strings.Join(id[:], ",") + ")").Find(&followers).Pluck("follower_id", &ids)
 	ids = append(ids, strings.Join(id[:], ","))
 	fmt.Println("user_id IN (" + strings.Join(ids[:], ",") + ")")
-	u := db.Where("user_id IN (" + strings.Join(ids[:], ",") + ")").Find(&posts).Value
+	u := db.Where("user_id IN (" + strings.Join(ids[:], ",") + ")").Preload("Tag").Find(&posts).Value
 	res, _ := json.Marshal(u)
 	w.Header().Set("Content-Type", "pkglication/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")

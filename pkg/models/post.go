@@ -14,6 +14,9 @@ type Post struct {
 	UserID int64  `binding:"required" json:"user_id"`
 	Desc   string `json:"description"`
 	Img    string `json:"image"`
+	Tag    []Tag
+	Comment []Comment
+	Like   []Like
 }
 
 type Like struct {
@@ -32,7 +35,7 @@ type Comment struct {
 type Tag struct {
 	gorm.Model
 	UserId int64 `binding:"required" json:"user_id"`
-	PostId int64 `binding:"required" json:"post_id"`
+	PostId int64 `binding:"required" json:"post_id" 
 }
 
 func init() {
@@ -58,7 +61,7 @@ func GetPost() []Post {
 
 func GetPostById(Id int64) (*Post, *gorm.DB) {
 	var getPost Post
-	db := dbsa.Where("ID=?", Id).Find(&getPost)
+	db := dbsa.Where("ID=?", Id).Preload("Tag").Find(&getPost)
 	return &getPost, db
 }
 
