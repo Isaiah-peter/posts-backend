@@ -35,7 +35,7 @@ type Comment struct {
 type Tag struct {
 	gorm.Model
 	UserId int64 `binding:"required" json:"user_id"`
-	PostId int64 `binding:"required" json:"post_id" 
+	PostId int64 `binding:"required" json:"post_id"`
 }
 
 func init() {
