@@ -12,11 +12,10 @@ import (
 )
 
 func main() {
-	os.Setenv("PORT", "8000")
 	port := os.Getenv("PORT")
 	adder := port
 	if port == ""{
-		adder = "8000"
+		adder = ":8000"
 	}
 	r := mux.NewRouter()
 	routes.RegisterUser(r)
