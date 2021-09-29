@@ -10,11 +10,18 @@ var (
 )
 
 func Connect() {
-	d, err := gorm.Open("mysql", "b0748306b8e0f7:745801d2@tcp(us-cdbr-east-04.cleardb.com:3306)/heroku_abdaf9e81ac8a78?charset=utf8mb4&parseTime=True&loc=Local")
-	if err != nil {
+	d, err := gorm.Open("mysql", "isaiah:Etanuwoma18@/social?charset=utf8mb4&parseTime=True&loc=Local")
+	c, erre := gorm.Open("mysql", "ba4efbf4b7a5b2:f5e2d1c4@tcp(us-cdbr-east-04.cleardb.com:3306)/heroku_2f48e549c2f3b08?charset=utf8mb4&parseTime=True&loc=Local")
+  	if err != nil {
 		panic(err)
 	}
-	db = d
+	if erre != nil {
+		panic(erre)
+	}
+	if c == nil {
+		db = d
+	}
+	db = c
 }
 
 func GetDB() *gorm.DB {

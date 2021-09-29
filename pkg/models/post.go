@@ -61,7 +61,7 @@ func GetPost() []Post {
 
 func GetPostById(Id int64) (*Post, *gorm.DB) {
 	var getPost Post
-	db := dbsa.Where("ID=?", Id).Preload("Tag").Find(&getPost)
+	db := dbsa.Where("ID=?", Id).Preload("Tag").Preload("Comment").Preload("Like").Find(&getPost)
 	return &getPost, db
 }
 
