@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/joho/godotenv"
 	"log"
 	"net/http"
@@ -19,6 +20,7 @@ func main() {
 	if port == ""{
 		port = ":8000"
 	}
+	fmt.Println(port)
 	r := mux.NewRouter()
 	routes.RegisterUser(r)
 	routes.Followers(r)
