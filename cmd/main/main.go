@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/joho/godotenv"
 	"log"
 	"net/http"
 	"os"
@@ -12,10 +13,11 @@ import (
 )
 
 func main() {
+	godotenv.Load()
 	port := os.Getenv("PORT")
-	adder := port
+
 	if port == ""{
-		adder = ":8000"
+		port = ":8000"
 	}
 	r := mux.NewRouter()
 	routes.RegisterUser(r)
