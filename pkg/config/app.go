@@ -28,7 +28,11 @@ func Connect() {
 	if dbName== "" {
 		dbName = "social"
 	}
-	dbUri := fmt.Sprintf("%s:%s@/%s?charset=utf8&parseTime=True",username ,password , dbName ) //Build connection string
+	dbHost := os.Getenv("db_host")
+	if dbHost == "" {
+		dbHost = "127.0.0.1:3306"
+	}
+	dbUri := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True",username ,password ,dbHost, dbName ) //Build connection string
 	fmt.Println(dbUri)
 	d, err := gorm.Open("mysql", dbUri)
   	if err != nil {
