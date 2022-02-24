@@ -21,7 +21,7 @@ var (
 )
 
 func Register(w http.ResponseWriter, r *http.Request) {
-	newUser := &models.User{}
+	var newUser *models.User
 	utils.ParseBody(r, newUser)
 	u := newUser.CreateUser()
 	res, _ := json.Marshal(u)
@@ -194,12 +194,11 @@ func GetAllUser(w http.ResponseWriter, r *http.Request) {
 	w.Write(res)
 }
 
-
 func GetUserByusername(w http.ResponseWriter, r *http.Request) {
 	usern := r.URL.Query()["username"]
 	utils.UseToken(r)
 	var user []models.User
-	u := db.Where("user_name=?", usern ).Find(&user).Value
+	u := db.Where("user_name=?", usern).Find(&user).Value
 	res, _ := json.Marshal(u)
 	w.Header().Set("Content-Type", "pkglication/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")

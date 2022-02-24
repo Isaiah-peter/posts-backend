@@ -112,10 +112,10 @@ func Like(w http.ResponseWriter, r *http.Request) {
 	like := post.CreateLike()
 	res, err := json.Marshal(like)
 	if err != nil {
-		res, _ := json.Marshal("you are not authorize")
+		msg := "you are not authorize"
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.WriteHeader(http.StatusUnauthorized)
-		w.Write(res)
+		w.Write([]byte(msg))
 	}
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
@@ -138,8 +138,6 @@ func Dislike(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
 }
-
-
 
 func GetUserpost(w http.ResponseWriter, r *http.Request) {
 	utils.UseToken(r)
@@ -176,7 +174,6 @@ func GetLike(w http.ResponseWriter, r *http.Request) {
 	w.Write(res)
 }
 
-
 func GetUserpostUsingName(w http.ResponseWriter, r *http.Request) {
 	utils.UseToken(r)
 	var user []models.User
@@ -186,9 +183,9 @@ func GetUserpostUsingName(w http.ResponseWriter, r *http.Request) {
 	var id []string
 	username := r.URL.Query()["username"]
 
-	db.Where("user_name=?", username ).Find(&user).Pluck("ID", &id)
+	db.Where("user_name=?", username).Find(&user).Pluck("ID", &id)
 	fmt.Println("user_id IN (" + strings.Join(id[:], ",") + ")")
-	db.Where("user_id IN (" + strings.Join(id[:], ",") + ")").Find(&followers).Pluck("follower_id", &ids)
+	db.Where("user_id IN ("+strings.Join(id[:], ",")+")").Find(&followers).Pluck("follower_id", &ids)
 	ids = append(ids, strings.Join(id[:], ","))
 	fmt.Println("user_id IN (" + strings.Join(ids[:], ",") + ")")
 	u := db.Where("user_id IN (" + strings.Join(ids[:], ",") + ")").Preload("Tag").Preload("Comment").Preload("Like").Find(&posts).Value
