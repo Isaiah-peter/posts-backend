@@ -16,7 +16,11 @@ var (
 )
 
 func AddFollowerToConversation(w http.ResponseWriter, r *http.Request) {
-	token := utils.UseToken(r)
+	token, ok := utils.UseToken(r)
+	if !ok {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
 	var conversation = &models.Conversation{}
 	verifiedID, err := strconv.ParseInt(fmt.Sprintf("%.f", token["UserID"]), 0, 0)
 	if err != nil {
@@ -46,7 +50,11 @@ func AddFollowerToConversation(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetConvOfUser(w http.ResponseWriter, r *http.Request) {
-	token := utils.UseToken(r)
+	token, ok := utils.UseToken(r)
+	if !ok {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
 	var conv []models.Conversation
 	verifiedID, err := strconv.ParseInt(fmt.Sprintf("%.f", token["UserID"]), 0, 0)
 	if err != nil {

@@ -20,7 +20,11 @@ var (
 func CreatePost(w http.ResponseWriter, r *http.Request) {
 	post := &models.Post{}
 	utils.ParseBody(r, post)
-	token := utils.UseToken(r)
+	token, ok := utils.UseToken(r)
+	if !ok {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
 	verifiedID, err := strconv.ParseInt(fmt.Sprintf("%.f", token["UserID"]), 0, 0)
 	if err != nil {
 		panic(err)
@@ -42,7 +46,11 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 
 func UpdatePost(w http.ResponseWriter, r *http.Request) {
 	post := &models.Post{}
-	utils.UseToken(r)
+	_, ok := utils.UseToken(r)
+	if !ok {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
 	utils.ParseBody(r, post)
 	vars := mux.Vars(r)
 	userId := vars["id"]
@@ -65,7 +73,11 @@ func UpdatePost(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetPostById(w http.ResponseWriter, r *http.Request) {
-	utils.UseToken(r)
+	_, ok := utils.UseToken(r)
+	if !ok {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
 	vars := mux.Vars(r)
 	userId := vars["id"]
 
@@ -83,7 +95,11 @@ func GetPostById(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeletePost(w http.ResponseWriter, r *http.Request) {
-	utils.UseToken(r)
+	_, ok := utils.UseToken(r)
+	if !ok {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
 	vars := mux.Vars(r)
 	userId := vars["id"]
 
@@ -103,7 +119,11 @@ func DeletePost(w http.ResponseWriter, r *http.Request) {
 func Like(w http.ResponseWriter, r *http.Request) {
 	post := &models.Like{}
 	utils.ParseBody(r, post)
-	token := utils.UseToken(r)
+	token, ok := utils.UseToken(r)
+	if !ok {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
 	verifiedID, err := strconv.ParseInt(fmt.Sprintf("%.f", token["UserID"]), 0, 0)
 	if err != nil {
 		panic(err)
@@ -122,7 +142,11 @@ func Like(w http.ResponseWriter, r *http.Request) {
 }
 
 func Dislike(w http.ResponseWriter, r *http.Request) {
-	utils.UseToken(r)
+	_, ok := utils.UseToken(r)
+	if !ok {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
 	vars := mux.Vars(r)
 	userId := vars["id"]
 
@@ -140,7 +164,11 @@ func Dislike(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetUserpost(w http.ResponseWriter, r *http.Request) {
-	utils.UseToken(r)
+	_, ok := utils.UseToken(r)
+	if !ok {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
 	followers := []models.Follow{}
 	posts := []models.Post{}
 	var ids []string
@@ -162,7 +190,11 @@ func GetUserpost(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetLike(w http.ResponseWriter, r *http.Request) {
-	utils.UseToken(r)
+	_, ok := utils.UseToken(r)
+	if !ok {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
 	vars := mux.Vars(r)
 	like := []models.Like{}
 	ids := vars["id"]

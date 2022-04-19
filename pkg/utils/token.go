@@ -31,25 +31,25 @@ func VerifyToken(r *http.Request) (*jwt.Token, error) {
 	return token, nil
 }
 
-func ValidToken(r *http.Request) error {
+func ValidToken(r *http.Request) (*jwt.Token, error) {
 	token, err := VerifyToken(r)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	if _, ok := token.Claims.(jwt.Claims); !ok && !token.Valid {
-		return err
+		return nil, err
 	}
-	return nil
+	return token, nil
 }
 
-func UseToken(r *http.Request) jwt.MapClaims {
-	token, err := VerifyToken(r)
+func UseToken(r *http.Request) (jwt.MapClaims, bool) {
+	token, err := ValidToken(r)
 	if err != nil {
 		panic(err)
 	}
 	claim, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
-		panic(ok)
+		fmt.Println(ok)
 	}
-	return claim
+	return claim, ok
 }

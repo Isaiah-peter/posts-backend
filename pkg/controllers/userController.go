@@ -16,18 +16,25 @@ import (
 )
 
 var (
-	db      = config.GetDB()
-	NewUser models.User
+	db = config.GetDB()
 )
 
 func Register(w http.ResponseWriter, r *http.Request) {
 	var newUser *models.User
 	utils.ParseBody(r, newUser)
 	u := newUser.CreateUser()
-	res, _ := json.Marshal(u)
+	res, err := json.Marshal(u)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+	}
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Write(res)
+	_, writeErr := w.Write(res)
+	if writeErr != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		_, _ = w.Write([]byte("fail to write"))
+	}
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {
@@ -38,7 +45,10 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	}
 	u := FindOne(newUser.Email, newUser.Password)
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(w).Encode(u)
+	if result := json.NewEncoder(w).Encode(u); result != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		_, _ = w.Write([]byte("fail to login"))
+	}
 }
 
 func FindOne(email string, password string) map[string]interface{} {
@@ -50,7 +60,7 @@ func FindOne(email string, password string) map[string]interface{} {
 
 	}
 
-	expireAt := time.Now().Add(time.Minute * 100000).Unix()
+	expireAt := time.Now().Add(time.Hour * 24).Unix()
 
 	errf := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if errf != nil && errf == bcrypt.ErrMismatchedHashAndPassword { //Password does not match!
@@ -81,7 +91,11 @@ func FindOne(email string, password string) map[string]interface{} {
 
 func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	var user = &models.User{}
-	token := utils.UseToken(r)
+	token, ok := utils.UseToken(r)
+	if !ok {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
 	utils.ParseBody(r, user)
 	vars := mux.Vars(r)
 	userId := vars["id"]
@@ -160,7 +174,11 @@ func GetUserById(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteUser(w http.ResponseWriter, r *http.Request) {
-	token := utils.UseToken(r)
+	token, ok := utils.UseToken(r)
+	if !ok {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
 	verifiedID, err := strconv.ParseInt(fmt.Sprintf("%.f", token["UserID"]), 0, 0)
 	if err != nil {
 		panic(err)

@@ -17,7 +17,11 @@ var (
 )
 
 func CreateComment(w http.ResponseWriter, r *http.Request) {
-	token := utils.UseToken(r)
+	token, ok := utils.UseToken(r)
+	if !ok {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
 	comment := &models.Comment{}
 	utils.ParseBody(r, comment)
 	verifiedID, err := strconv.ParseInt(fmt.Sprintf("%.f", token["UserID"]), 0, 0)
@@ -34,7 +38,11 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetCommentById(w http.ResponseWriter, r *http.Request) {
-	utils.UseToken(r)
+	_, ok := utils.UseToken(r)
+	if !ok {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
 	comment := []models.Comment{}
 	vars := mux.Vars(r)
 	userid := vars["id"]
@@ -52,7 +60,11 @@ func GetCommentById(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetComment(w http.ResponseWriter, r *http.Request) {
-	utils.UseToken(r)
+	_, ok := utils.UseToken(r)
+	if !ok {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
 	comment := []models.Comment{}
 	u := db.Find(&comment).Value
 	res, _ := json.Marshal(u)
@@ -76,11 +88,15 @@ func GetNotification(w http.ResponseWriter, r *http.Request) {
 }
 
 func Search(w http.ResponseWriter, r *http.Request) {
-	utils.UseToken(r)
+	_, ok := utils.UseToken(r)
+	if !ok {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
 	var user []models.User
 	username := r.URL.Query()["username"]
 	u := db.Where("name LIKE '" + strings.Join(username, "%") + "%'").Or("email LIKE '" + strings.Join(username, "%") + "%'").Or("user_name LIKE '" + strings.Join(username, "%") + "%'").Find(&user).Value
-	fmt.Println( strings.Join(username, "%")+"%")
+	fmt.Println(strings.Join(username, "%") + "%")
 	res, _ := json.Marshal(u)
 	w.Header().Set("Content-Type", "pkglication/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")

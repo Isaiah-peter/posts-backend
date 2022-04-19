@@ -14,11 +14,15 @@ import (
 
 var (
 	NewFollower models.Follow
-	NewTag models.Tag
+	NewTag      models.Tag
 )
 
 func Followers(w http.ResponseWriter, r *http.Request) {
-	token := utils.UseToken(r)
+	token, ok := utils.UseToken(r)
+	if !ok {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
 	follower := &models.Follow{}
 	utils.ParseBody(r, follower)
 	verifiedID, err := strconv.ParseInt(fmt.Sprintf("%.f", token["UserID"]), 0, 0)
@@ -41,7 +45,11 @@ func Followers(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetFollower(w http.ResponseWriter, r *http.Request) {
-	utils.UseToken(r)
+	_, ok := utils.UseToken(r)
+	if !ok {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
 	follower := []models.Follow{}
 	u := db.Find(&follower).Value
 	res, _ := json.Marshal(u)
@@ -52,7 +60,11 @@ func GetFollower(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetUserFollowerDetails(w http.ResponseWriter, r *http.Request) {
-	utils.UseToken(r)
+	_, ok := utils.UseToken(r)
+	if !ok {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
 	followers := []models.Follow{}
 	user := []models.User{}
 	var ids []string
@@ -73,7 +85,11 @@ func GetUserFollowerDetails(w http.ResponseWriter, r *http.Request) {
 }
 
 func Unfollow(w http.ResponseWriter, r *http.Request) {
-	utils.UseToken(r)
+	_, ok := utils.UseToken(r)
+	if !ok {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
 	vars := mux.Vars(r)
 	userId := vars["id"]
 
@@ -90,8 +106,12 @@ func Unfollow(w http.ResponseWriter, r *http.Request) {
 	w.Write(res)
 }
 
-func CreateTag(w http.ResponseWriter, r *http.Request)  {
-	utils.UseToken(r)
+func CreateTag(w http.ResponseWriter, r *http.Request) {
+	_, ok := utils.UseToken(r)
+	if !ok {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
 	var tag = &models.Tag{}
 	utils.ParseBody(r, tag)
 	u := tag.CreateTag()
@@ -100,8 +120,12 @@ func CreateTag(w http.ResponseWriter, r *http.Request)  {
 	w.Write(res)
 }
 
-func GetTag(w http.ResponseWriter, r *http.Request)  {
-	utils.UseToken(r)
+func GetTag(w http.ResponseWriter, r *http.Request) {
+	_, ok := utils.UseToken(r)
+	if !ok {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
 	var tag []models.Tag
 	vars := mux.Vars(r)
 	postId := vars["id"]

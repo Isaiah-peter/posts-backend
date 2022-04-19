@@ -18,7 +18,11 @@ var (
 )
 
 func CreateGroup(w http.ResponseWriter, r *http.Request) {
-	token := utils.UseToken(r)
+	token, ok := utils.UseToken(r)
+	if !ok {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
 	group := &models.Group{}
 	utils.ParseBody(r, group)
 	verifiedID, err := strconv.ParseInt(fmt.Sprintf("%.f", token["UserID"]), 0, 0)
@@ -39,7 +43,11 @@ func CreateGroup(w http.ResponseWriter, r *http.Request) {
 }
 
 func AddGroupUser(w http.ResponseWriter, r *http.Request) {
-	utils.UseToken(r)
+	_, ok := utils.UseToken(r)
+	if !ok {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
 	user := &models.GroupUser{}
 	utils.ParseBody(r, user)
 	u := user.AddGroup()
@@ -50,7 +58,11 @@ func AddGroupUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateGroupMessage(w http.ResponseWriter, r *http.Request) {
-	utils.UseToken(r)
+	_, ok := utils.UseToken(r)
+	if !ok {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
 	message := &models.GroupMessages{}
 	utils.ParseBody(r, message)
 
@@ -62,7 +74,11 @@ func CreateGroupMessage(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetGroupById(w http.ResponseWriter, r *http.Request) {
-	utils.UseToken(r)
+	_, ok := utils.UseToken(r)
+	if !ok {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
 	group := []models.Group{}
 	vars := mux.Vars(r)
 	userid := vars["id"]
@@ -79,7 +95,11 @@ func GetGroupById(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetGroupUserjoined(w http.ResponseWriter, r *http.Request) {
-	utils.UseToken(r)
+	_, ok := utils.UseToken(r)
+	if !ok {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
 	group := []models.Group{}
 	vars := mux.Vars(r)
 	userid := vars["id"]
@@ -96,7 +116,11 @@ func GetGroupUserjoined(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetGroupUser(w http.ResponseWriter, r *http.Request) {
-	utils.UseToken(r)
+	_, ok := utils.UseToken(r)
+	if !ok {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
 	group := []models.GroupUser{}
 	vars := mux.Vars(r)
 	userid := vars["id"]
@@ -113,7 +137,11 @@ func GetGroupUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetGroupUserbygruoupid(w http.ResponseWriter, r *http.Request) {
-	utils.UseToken(r)
+	_, ok := utils.UseToken(r)
+	if !ok {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
 	group := []models.GroupUser{}
 	vars := mux.Vars(r)
 	userid := vars["id"]
@@ -130,7 +158,11 @@ func GetGroupUserbygruoupid(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetGroupMessage(w http.ResponseWriter, r *http.Request) {
-	utils.UseToken(r)
+	_, ok := utils.UseToken(r)
+	if !ok {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
 	group := []models.GroupMessages{}
 	vars := mux.Vars(r)
 	userid := vars["id"]

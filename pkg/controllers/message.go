@@ -15,7 +15,11 @@ var (
 )
 
 func SendMessage(w http.ResponseWriter, r *http.Request) {
-	utils.UseToken(r)
+	_, ok := utils.UseToken(r)
+	if !ok {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
 	var message = &models.Message{}
 
 	utils.ParseBody(r, message)
@@ -28,7 +32,11 @@ func SendMessage(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetMessage(w http.ResponseWriter, r *http.Request) {
-	utils.UseToken(r)
+	_, ok := utils.UseToken(r)
+	if !ok {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
 	message := []models.Message{}
 
 	vars := mux.Vars(r)
