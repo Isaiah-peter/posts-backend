@@ -1,45 +1,30 @@
 package config
 
 import (
-	"fmt"
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
-	"github.com/joho/godotenv"
 	"os"
+
+	"github.com/jinzhu/gorm"
+	"github.com/joho/godotenv"
+	_ "github.com/lib/pq"
 )
 
 var (
 	db *gorm.DB
 )
 
+const (
+	dbDriver = "postgres"
+	dbSource = "postgresql://postgres:secret@localhost:5432/social-app?sslmode=disable"
+)
+
 func Connect() {
-    godotenv.Load()
-
-
-	username := os.Getenv("db_user")
-	if username == "" {
-		username = "isaiah"
+	godotenv.Load()
+	var url = os.Getenv("URL")
+	if url == "" {
+		url = dbSource
 	}
-	password := os.Getenv("db_pass")
-	if password == "" {
-		password = "Etanuwoma18"
-	}
-	dbName := os.Getenv("db_name")
-	if dbName== "" {
-		dbName = "social"
-	}
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "3306"
-	}
-	dbHost := os.Getenv("db_host")
-	if dbHost == "" {
-		dbHost = "127.0.0.1"
-	}
-	dbUri := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True",username ,password ,dbHost, port ,dbName ) //Build connection string
-	fmt.Println(dbUri)
-	d, err := gorm.Open("mysql", dbUri)
-  	if err != nil {
+	d, err := gorm.Open(dbDriver, url)
+	if err != nil {
 		panic(err)
 	}
 	db = d
