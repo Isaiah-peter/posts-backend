@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/joho/godotenv"
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/joho/godotenv"
 
 	"github.com/Isaiah-peter/posts-backend/pkg/routes"
 	"github.com/gorilla/handlers"
@@ -15,9 +16,9 @@ import (
 
 func main() {
 	godotenv.Load()
-	port := os.Getenv("PORT")
+	port := os.Getenv("PORTS")
 
-	if port == ""{
+	if port == "" {
 		port = ":8000"
 	}
 	fmt.Println(port)
