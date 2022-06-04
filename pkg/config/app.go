@@ -19,7 +19,7 @@ const (
 
 func Connect() {
 	godotenv.Load()
-	var url = os.Getenv("URL")
+	var url = os.Getenv("DATABASE_URL")
 	if url == "" {
 		url = dbSource
 	}
