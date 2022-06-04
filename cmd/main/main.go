@@ -16,7 +16,7 @@ import (
 
 func main() {
 	godotenv.Load()
-	port := os.Getenv("PORTS")
+	port := os.Getenv("$PORT")
 
 	if port == "" {
 		port = ":8000"
