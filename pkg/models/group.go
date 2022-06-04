@@ -5,10 +5,6 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-var (
-	dbg *gorm.DB
-)
-
 type Group struct {
 	gorm.Model
 	Name   string `json:"nameofgroup"`
@@ -30,26 +26,26 @@ type GroupMessages struct {
 
 func init() {
 	config.Connect()
-	dbg = config.GetDB()
-	dbg.AutoMigrate(&Group{})
-	dbg.AutoMigrate(&GroupUser{})
-	dbg.AutoMigrate(&GroupMessages{})
+	db = config.GetDB()
+	db.AutoMigrate(&Group{})
+	db.AutoMigrate(&GroupUser{})
+	db.AutoMigrate(&GroupMessages{})
 }
 
 func (g *Group) CreateGroup() *Group {
-	dbg.NewRecord(g)
-	dbg.Create(g)
+	db.NewRecord(g)
+	db.Create(g)
 	return g
 }
 
 func (g *GroupUser) AddGroup() *GroupUser {
-	dbg.NewRecord(g)
-	dbg.Create(g)
+	db.NewRecord(g)
+	db.Create(g)
 	return g
 }
 
 func (m *GroupMessages) GroupMessage() *GroupMessages {
-	dbg.NewRecord(m)
-	dbg.Create(m)
+	db.NewRecord(m)
+	db.Create(m)
 	return m
 }

@@ -20,7 +20,7 @@ var (
 )
 
 func Register(w http.ResponseWriter, r *http.Request) {
-	var newUser *models.User
+	var newUser *models.User = new(models.User)
 	utils.ParseBody(r, newUser)
 	u := newUser.CreateUser()
 	res, err := json.Marshal(u)
@@ -30,11 +30,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	_, writeErr := w.Write(res)
-	if writeErr != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		_, _ = w.Write([]byte("fail to write"))
-	}
+	w.Write(res)
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {
