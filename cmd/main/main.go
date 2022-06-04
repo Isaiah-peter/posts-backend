@@ -17,10 +17,11 @@ import (
 func main() {
 	godotenv.Load()
 	port := os.Getenv("PORT")
-	fmt.Println(port)
+
 	if port == "" {
 		port = ":8000"
 	}
+	fmt.Println(port)
 	r := mux.NewRouter()
 	routes.RegisterUser(r)
 	routes.Followers(r)
@@ -29,6 +30,6 @@ func main() {
 	routes.MessageUser(r)
 	routes.Group(r)
 	http.Handle("/", r)
-	log.Fatal(http.ListenAndServe(port, handlers.CORS(handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}), handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "OPTIONS", "DELETE"}), handlers.AllowedOrigins([]string{"*"}))(r)))
+	log.Fatal(http.ListenAndServe(":"+os.Getenv("PORT"), handlers.CORS(handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}), handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "OPTIONS", "DELETE"}), handlers.AllowedOrigins([]string{"*"}))(r)))
 
 }
